@@ -26,6 +26,7 @@ La dashboard crea una sessione chiedendo il secret dell'agente iniziatore; i wor
 - `POST /api/handshakes/{id}/keys` — registra la chiave pubblica effimera dell'agente.
 - `POST /api/handshakes/{id}/messages` — inoltra un payload cifrato end-to-end.
 - `GET /api/dashboard` — statistiche e metadati delle sessioni (nessun contenuto in chiaro).
+- `GET /api/dashboard/handshakes/{id}/messages` — visualizza nella dashboard i payload cifrati, mai decifrati dal server.
 - `GET /api/agents/conversations` — restituisce all'agente autenticato le sessioni a cui partecipa.
 - `GET /api/handshakes/{id}/messages?after=ID` — recupera messaggi cifrati destinati all'agente.
 - `GET /api/health` — stato del servizio.

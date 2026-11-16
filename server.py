@@ -156,6 +156,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
+        if path.startswith("/api/dashboard/handshakes/") and path.endswith("/messages"):
+            handshake_id = path[len("/api/dashboard/handshakes/"):-len("/messages")].strip("/")
+            with sqlite3.connect(DB_PATH) as db:
+                db.row_factory = sqlite3.Row
+                exists = db.execute("SELECT 1 FROM handshakes WHERE id=?", (handshake_id,)).fetchone()
+                if not exists:
+                    return self.send_json({"error": "handshake_not_found"}, 404)
+                messages = db.execute("SELECT id, sender_id, nonce, ciphertext, created_at FROM messages WHERE handshake_id=? ORDER BY id DESC LIMIT 100", (handshake_id,)).fetchall()
+            return self.send_json({"handshake_id": handshake_id, "messages": [dict(message) for message in messages]})
         if path == "/api/agents/conversations":
             agent = self.auth()
             if not agent:
